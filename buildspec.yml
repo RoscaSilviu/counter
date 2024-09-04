@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Login to ECR
+      - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 022499048865.dkr.ecr.eu-north-1.amazonaws.com
+
+  build:
+    commands:
+      - echo Building docker image
+      - docker build -t silviu-counter .
+      - docker tag silviu-counter:latest 022499048865.dkr.ecr.eu-north-1.amazonaws.com/silviu-counter:latest
+
+
+  post_build:
+    commands:
+      - docker push 022499048865.dkr.ecr.eu-north-1.amazonaws.com/silviu-counter:latest
+
+artifacts:
+  files:
+    - '**/*'
